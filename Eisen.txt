@@ -1,1 +1,28 @@
+Eisen - Wat moet de teller SOWIESO kunnen
+
+Functies origineel:
+- Kilometerstand
+- Snelheid
+- Tijd
+- Trip
+- Toerenteller
+- Tempratuur lampje
+- Groot licht lampje
+- Olie lampje
+- Knipperlicht lampje
+- Benzine lampje
+
+Eisen vervanger: 
+- Alles wat de originele ook kan
+- Toerenteller als getal
+- Tempratuur als getal
+- Eiken snelheid
+- Bruikbaar voor snelheid sensor op voorwiel en achterwiel
+- Instelbaar km/u of mp/h
+- Kilometerstand instelbaar
+- (spat)Waterdicht 
+- Plug & play
+- Zelfde montage als origineel
+- SMD componenten 1 kant
+
 
