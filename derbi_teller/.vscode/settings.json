@@ -3,6 +3,10 @@
         "fonts.h": "c",
         "stdlib.h": "c",
         "string.h": "c",
-        "stdarg.h": "c"
+        "stdarg.h": "c",
+        "main.h": "c",
+        "stdio.h": "c",
+        "buttons.h": "c",
+        "speed.h": "c"
     }
 }

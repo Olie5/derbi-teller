@@ -34,6 +34,9 @@ extern "C" {
 #include "display.h"
 #include "SSD1306.h"
 #include "fonts.h"
+#include "buttons.h"
+#include "speed.h"
+#include <stdio.h>
 
 /* USER CODE END Includes */
 

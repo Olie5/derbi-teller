@@ -1,5 +1,5 @@
-#ifndef BUTTONS_H
-#define BUTTONS_H
+#ifndef SPEED_H
+#define SPEED_H
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -10,9 +10,9 @@ extern C {
 
 #include "main.h"
 
-extern ADC_HandleTypeDef hadc1;
+extern ADC_HandleTypeDef hadc2;
 
-void buttons(void);
+void SPEED(void);
 
 /* C++ detection */
 #ifdef __cplusplus

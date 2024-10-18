@@ -95,7 +95,7 @@ typedef enum {
  *           - 0: LCD was not detected on I2C port
  *           - 1: LCD initialized OK and ready to use
  */
-uint8_t SSD1306_Init(void);
+uint8_t SSD1306_Init(I2C_HandleTypeDef *i2cdevice);
 
 /** 
  * @brief  Updates buffer from internal RAM to LCD
@@ -103,7 +103,7 @@ uint8_t SSD1306_Init(void);
  * @param  None
  * @retval None
  */
-void SSD1306_UpdateScreen(void);
+void SSD1306_UpdateScreen(I2C_HandleTypeDef *i2cdevice);
 
 /**
  * @brief  Toggles pixels invertion inside internal RAM
@@ -238,7 +238,7 @@ void SSD1306_DrawFilledCircle(int16_t x0, int16_t y0, int16_t r, SSD1306_COLOR_t
  * @param  end_row: Ending row to Scroll to right
  * @retval None
  */
-void SSD1306_ScrollRight(uint8_t start_row, uint8_t end_row);
+void SSD1306_ScrollRight(I2C_HandleTypeDef *i2cdevice, uint8_t start_row, uint8_t end_row);
 
 /**
  * @brief  Scroll the Scream pixels to left
@@ -247,7 +247,7 @@ void SSD1306_ScrollRight(uint8_t start_row, uint8_t end_row);
  * @param  end_row: Ending row to Scroll to left
  * @retval None
  */
-void SSD1306_ScrollLeft(uint8_t start_row, uint8_t end_row);
+void SSD1306_ScrollLeft(I2C_HandleTypeDef *i2cdevice, uint8_t start_row, uint8_t end_row);
 
 /**
  * @brief  Scroll the Scream pixels to diagonal right
@@ -256,7 +256,7 @@ void SSD1306_ScrollLeft(uint8_t start_row, uint8_t end_row);
  * @param  end_row: Ending row to Scroll to diagonal right
  * @retval None
  */
-void SSD1306_Scrolldiagright(uint8_t start_row, uint8_t end_row);
+void SSD1306_Scrolldiagright(I2C_HandleTypeDef *i2cdevice, uint8_t start_row, uint8_t end_row);
 
 /**
  * @brief  Scroll the Scream pixels to diagonal left
@@ -265,21 +265,21 @@ void SSD1306_Scrolldiagright(uint8_t start_row, uint8_t end_row);
  * @param  end_row: Ending row to Scroll to diagonal left
  * @retval None
  */
-void SSD1306_Scrolldiagleft(uint8_t start_row, uint8_t end_row);
+void SSD1306_Scrolldiagleft(I2C_HandleTypeDef *i2cdevice, uint8_t start_row, uint8_t end_row);
 
 /**
  * @brief  Stop scrolling the Scream
  * @note   None
  * @retval None
  */
-void SSD1306_Stopscroll(void);
+void SSD1306_Stopscroll(I2C_HandleTypeDef *i2cdevice);
 
 /**
  * @brief  Inverts the display colors
  * @note   i = 1->inverted, i = 0->normal
  * @retval None
  */
-void SSD1306_InvertDisplay (int i);
+void SSD1306_InvertDisplay (I2C_HandleTypeDef *i2cdevice, int i);
 
 /**
  * @brief  Clear the Display
@@ -314,7 +314,7 @@ void SSD1306_ShowBitmap(const unsigned char bitmap[]);
  * @param  ... : Unlimited pointers to const unsigned char
  * @retval None
  */
-void SSD1306_ShowGif(uint8_t n_frames, ...);
+void SSD1306_ShowGif(I2C_HandleTypeDef *i2cdevice, uint8_t n_frames, ...);
 
 /**
  * @brief  Shows a increasing count on display
@@ -322,7 +322,7 @@ void SSD1306_ShowGif(uint8_t n_frames, ...);
  * @param  seconds: Counting time
  * @retval None
  */
-void SSD1306_Counter(uint8_t seconds);
+void SSD1306_Counter(I2C_HandleTypeDef *i2cdevice, uint8_t seconds);
 
 /**
  * @brief  Sends formatted output to display
@@ -348,7 +348,7 @@ void SSD1306_Counter(uint8_t seconds);
  *		HAL_Delay(1000);
  *	}
  */
-void SSD1306_Println(char* format, ...);
+void SSD1306_Println(I2C_HandleTypeDef *i2cdevice, char* format, ...);
 
 /* I2C Functions */
 
@@ -371,7 +371,7 @@ void ssd1306_I2C_Init();
  * @param  data: data to be written
  * @retval None
  */
-void ssd1306_I2C_Write(uint8_t address, uint8_t reg, uint8_t data);
+void ssd1306_I2C_Write(I2C_HandleTypeDef *i2cdevice,uint8_t address, uint8_t reg, uint8_t data);
 
 /**
  * @brief  Writes multi bytes to slave
@@ -382,7 +382,7 @@ void ssd1306_I2C_Write(uint8_t address, uint8_t reg, uint8_t data);
  * @param  count: how many bytes will be written
  * @retval None
  */
-void ssd1306_I2C_WriteMulti(uint8_t address, uint8_t reg, uint8_t *data, uint16_t count);
+void ssd1306_I2C_WriteMulti(I2C_HandleTypeDef *i2cdevice, uint8_t address, uint8_t reg, uint8_t *data, uint16_t count);
 
 /* C++ detection */
 #ifdef __cplusplus
