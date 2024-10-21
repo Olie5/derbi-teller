@@ -140,7 +140,9 @@ int main(void)
   while (1)
   {
     buttons();
-    speed();
+    samplefreq();
+   // calcfreq();
+    //speed();
 
      //SSD1306_UpdateScreen(&hi2c1);
 

@@ -6,13 +6,14 @@
 extern C {
 #endif
 
-
-
 #include "main.h"
+#include <stdio.h>
 
 extern ADC_HandleTypeDef hadc2;
 
-void SPEED(void);
+void speed(uint16_t freq);
+void samplefreq(void);
+void calcfreq(void);
 
 /* C++ detection */
 #ifdef __cplusplus

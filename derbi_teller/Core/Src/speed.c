@@ -5,43 +5,68 @@ extern I2C_HandleTypeDef hi2c1;
 char speedString[10];
 uint16_t speedvalue = 0;
 
-uint16_t buttonvalue1 = 0;
+#define SAMPLE_COUNT 1000  // Number of samples to collect
+#define THRESHOLD 1000   // Threshold to detect high state
 
-void speed(){
-    HAL_ADC_Start(&hadc2);
-    speedvalue = HAL_ADC_GetValue(&hadc2);
+uint32_t timestamps[SAMPLE_COUNT];
+uint32_t adc_samples[SAMPLE_COUNT];
+
+void speed(uint16_t freq){
+    speedvalue = freq;
     sprintf(speedString, "%d", speedvalue);
     SSD1306_Fill(SSD1306_COLOR_BLACK);
     SSD1306_GotoXY (10,10); // goto 10, 10 
-    SSD1306_Puts ("Value:", &Font_11x18, 1); // print Hello 
     SSD1306_Puts(speedString, &Font_11x18, 1);
+    SSD1306_UpdateScreen(&hi2c1);
+}
 
-    buttonvalue1 = HAL_ADC_GetValue(&hadc1);
-    SSD1306_GotoXY (10, 30); 
-    if(buttonvalue1 < 100){
-       SSD1306_Puts("links", &Font_11x18, 1);
+void samplefreq() {
+    uint32_t prev_value = 0;
+    uint32_t new_value = 0;
+    uint32_t start_time = HAL_GetTick();  // Start time (ms)
+    int edge_count = 0;
+
+    // Collect samples and detect rising edges
+    for (int i = 0; i < SAMPLE_COUNT; ++i) {
+        HAL_ADC_Start(&hadc2);  // Start ADC conversion
+
+        // Wait for ADC conversion to complete
+        if (HAL_ADC_PollForConversion(&hadc2, 10) == HAL_OK) {
+            new_value = HAL_ADC_GetValue(&hadc2);  // Read ADC value
+        }
+        adc_samples[i] = new_value;  // Store the sample
+
+        // Detect rising edge
+        if (new_value > THRESHOLD && prev_value <= THRESHOLD) {
+            timestamps[edge_count++] = HAL_GetTick() - start_time;  // Save timestamp
+            if (edge_count >= SAMPLE_COUNT) break;  // Stop if max edges reached
+        }
+        prev_value = new_value;
     }
 
-     else if((buttonvalue1 > 100) && (buttonvalue1 < 1000)){
-       SSD1306_Puts("boven", &Font_11x18, 1);
+    // Calculate the total time between edges
+    uint32_t total_time = 0;
+    for (int i = 1; i < edge_count; ++i) {
+        total_time += (timestamps[i] - timestamps[i - 1]);
     }
 
-     else if((buttonvalue1 > 1000) && (buttonvalue1 < 1500)){
-       SSD1306_Puts("beneden", &Font_11x18, 1);
-    }
+    // Calculate the average period in ms
+    float period_ms = (float)total_time / (edge_count - 1);
 
-     else if((buttonvalue1 > 1500) && (buttonvalue1 < 2500)){
-       SSD1306_Puts("rechts", &Font_11x18, 1);
-    }
+    // Convert period to frequency (Hz)
+    float frequency = 1000.0f / period_ms;
 
-     else if((buttonvalue1 > 2500) && (buttonvalue1 < 3500)){
-       SSD1306_Puts("ok", &Font_11x18, 1);
-    }
+    // Call the speed function with frequency (converted to integer)
+    speed((uint16_t)frequency);
 
-     else if(buttonvalue1 > 3500 ){
-       SSD1306_Puts("idle", &Font_11x18, 1);
-    }
+}
 
+void calcfreq(){
+    // if (timestamps[1] == 0) {  // Check if at least two edges are detected
+    //     printf("Not enough edges detected!\n");
+    //     return;
+    // }
 
-    SSD1306_UpdateScreen(&hi2c1); 
+    // Calculate period (average time between rising edges)
+    
 }
