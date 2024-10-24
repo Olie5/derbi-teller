@@ -55,7 +55,8 @@ SPI_HandleTypeDef hspi1;
 
 /* USER CODE BEGIN PV */
 uint32_t adc3_dmabuf[ADCBUF];
-
+uint32_t value_adc;
+uint32_t value_dac=0;
 
 /* USER CODE END PV */
 
@@ -121,7 +122,7 @@ int main(void)
   MX_ADC3_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_ADC_Start_DMA(&hadc3, adc3_dmabuf, sizeof(adc3_dmabuf));
+
   SSD1306_Init (&hi2c3); // initialise the display 
   SSD1306_Init (&hi2c1);
   SSD1306_Fill(SSD1306_COLOR_BLACK);
@@ -129,9 +130,7 @@ int main(void)
   SSD1306_Fill(SSD1306_COLOR_BLACK);
   SSD1306_UpdateScreen(&hi2c1);
 
-  
-
-  //SSD1306_ScrollRight(59, 60);
+  HAL_ADC_Start_DMA(&hadc3, (uint32_t*)&adc3_dmabuf, ADCBUF);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -274,7 +273,7 @@ static void MX_ADC2_Init(void)
   hadc2.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
   hadc2.Init.Resolution = ADC_RESOLUTION_12B;
   hadc2.Init.ScanConvMode = DISABLE;
-  hadc2.Init.ContinuousConvMode = DISABLE;
+  hadc2.Init.ContinuousConvMode = ENABLE;
   hadc2.Init.DiscontinuousConvMode = DISABLE;
   hadc2.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
   hadc2.Init.ExternalTrigConv = ADC_SOFTWARE_START;
@@ -332,8 +331,8 @@ static void MX_ADC3_Init(void)
   hadc3.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc3.Init.DataAlign = ADC_DATAALIGN_RIGHT;
   hadc3.Init.NbrOfConversion = 1;
-  hadc3.Init.DMAContinuousRequests = DISABLE;
-  hadc3.Init.EOCSelection = ADC_EOC_SEQ_CONV;
+  hadc3.Init.DMAContinuousRequests = ENABLE;
+  hadc3.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   if (HAL_ADC_Init(&hadc3) != HAL_OK)
   {
     Error_Handler();
@@ -504,9 +503,9 @@ static void MX_DMA_Init(void)
   __HAL_RCC_DMA2_CLK_ENABLE();
 
   /* DMA interrupt init */
-  /* DMA2_Stream0_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
+  /* DMA2_Stream1_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream1_IRQn);
 
 }
 
@@ -608,7 +607,10 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
-  process_halfbuf();
+  if (hadc == &hadc3)
+	{
+    process_halfbuf();
+  }
 }
 /* USER CODE END 4 */
 

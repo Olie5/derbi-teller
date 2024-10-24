@@ -10,7 +10,7 @@ extern C {
 #include "speed.h"
 #include "arm_math.h"
 #define TEST_LENGTH_SAMPLES 2048
-#define ADCBUF 1024
+#define ADCBUF 2048
 
 void process_halfbuf();
 void fft();

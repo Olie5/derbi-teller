@@ -35,7 +35,7 @@ rule C_COMPILER__derbi_teller_unscanned_Debug
 # Rule for linking C executable.
 
 rule C_EXECUTABLE_LINKER__derbi_teller_Debug
-  command = C:\Windows\system32\cmd.exe /C "$PRE_LINK && C:\ST\STM32CubeCLT_1.15.0\GNU-tools-for-STM32\bin\arm-none-eabi-gcc.exe $FLAGS -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard  -T "C:/Users/olivi/Documents/GitHub/derbi-teller/derbi_teller/STM32F407VGTx_FLASH.ld" --specs=nano.specs -Wl,-Map=derbi_teller.map -Wl,--gc-sections -Wl,--start-group -lc -lm -Wl,--end-group -Wl,--print-memory-usage $LINK_FLAGS $in -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
+  command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && C:\ST\STM32CubeCLT_1.15.0\GNU-tools-for-STM32\bin\arm-none-eabi-gcc.exe $FLAGS -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard  -T "C:/Users/olivi/Documents/GitHub/derbi-teller/derbi_teller/STM32F407VGTx_FLASH.ld" --specs=nano.specs -Wl,-Map=derbi_teller.map -Wl,--gc-sections -Wl,--start-group -lc -lm -Wl,--end-group -Wl,--print-memory-usage $LINK_FLAGS $in -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
   description = Linking C executable $TARGET_FILE
   restat = $RESTAT
 
