@@ -23,6 +23,7 @@ target_include_directories(stm32cubemx INTERFACE
     ../../Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Inc
     ../../Drivers/CMSIS/Device/ST/STM32F4xx/Include
     ../../Drivers/CMSIS/Include
+    ../../Middlewares/ST/ARM/DSP/Inc
 )
 
 target_sources(stm32cubemx INTERFACE
@@ -37,6 +38,7 @@ target_sources(stm32cubemx INTERFACE
     ../../Core/Src/display.c
     ../../Core/Src/buttons.c
     ../../Core/Src/speed.c
+    ../../Core/Src/toerental.c
     ../../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_hcd.c
     ../../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c
     ../../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
@@ -74,9 +76,11 @@ target_sources(stm32cubemx INTERFACE
 )
 
 target_link_directories(stm32cubemx INTERFACE
+    ../../Middlewares/ST/ARM/DSP/Lib
 )
 
-target_link_libraries(stm32cubemx INTERFACE
+target_link_libraries(stm32cubemx INTERFACE 
+	:libarm_cortexM4lf_math.a
 )
 
 # Validate that STM32CubeMX code is compatible with C standard

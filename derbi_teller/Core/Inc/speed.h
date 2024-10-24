@@ -7,6 +7,7 @@ extern C {
 #endif
 
 #include "main.h"
+#include "arm_math.h"
 #include <stdio.h>
 
 extern ADC_HandleTypeDef hadc2;

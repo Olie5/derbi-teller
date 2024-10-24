@@ -1190,6 +1190,30 @@
 			"value" : "FALSE"
 		},
 		{
+			"name" : "LIB_INCLUDES",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Path to a file."
+				}
+			],
+			"type" : "PATH",
+			"value" : "LIB_INCLUDES-NOTFOUND"
+		},
+		{
+			"name" : "LIB_TO_INCLUDE",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Path to a library."
+				}
+			],
+			"type" : "FILEPATH",
+			"value" : "LIB_TO_INCLUDE-NOTFOUND"
+		},
+		{
 			"name" : "derbi_teller_BINARY_DIR",
 			"properties" : 
 			[

@@ -36,7 +36,9 @@ extern "C" {
 #include "fonts.h"
 #include "buttons.h"
 #include "speed.h"
+#include "toerental.h"
 #include <stdio.h>
+#include "arm_math.h"
 
 /* USER CODE END Includes */
 

@@ -32,7 +32,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define ARM_MATH_M4
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -43,6 +43,8 @@
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
 ADC_HandleTypeDef hadc2;
+ADC_HandleTypeDef hadc3;
+DMA_HandleTypeDef hdma_adc3;
 
 I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c3;
@@ -52,18 +54,22 @@ I2S_HandleTypeDef hi2s3;
 SPI_HandleTypeDef hspi1;
 
 /* USER CODE BEGIN PV */
+uint32_t adc3_dmabuf[ADCBUF];
+
 
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_I2S3_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_I2C3_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_ADC2_Init(void);
+static void MX_ADC3_Init(void);
 void MX_USB_HOST_Process(void);
 
 /* USER CODE BEGIN PFP */
@@ -104,6 +110,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_I2C1_Init();
   MX_I2S3_Init();
   MX_SPI1_Init();
@@ -111,27 +118,19 @@ int main(void)
   MX_I2C3_Init();
   MX_ADC1_Init();
   MX_ADC2_Init();
+  MX_ADC3_Init();
   /* USER CODE BEGIN 2 */
 
+  HAL_ADC_Start_DMA(&hadc3, adc3_dmabuf, sizeof(adc3_dmabuf));
   SSD1306_Init (&hi2c3); // initialise the display 
   SSD1306_Init (&hi2c1);
   SSD1306_Fill(SSD1306_COLOR_BLACK);
-  SSD1306_DrawFilledRectangle(1,1, 125, 19, SSD1306_COLOR_WHITE);
-  SSD1306_DrawFilledRectangle(2,2, 123, 17, SSD1306_COLOR_BLACK);
-  SSD1306_GotoXY(3,3);
-  SSD1306_Puts("Your mom", &Font_11x18, 1);
-
-  SSD1306_DrawFilledRectangle(0,22, 128, 19, SSD1306_COLOR_WHITE);
-  SSD1306_DrawFilledRectangle(1,23, 124, 17, SSD1306_COLOR_BLACK);
-  SSD1306_GotoXY(3,24);
-  SSD1306_Puts("hella", &Font_11x18, 1);
-
-  SSD1306_DrawFilledRectangle(1,43, 125, 19, SSD1306_COLOR_WHITE);
-  SSD1306_DrawFilledRectangle(2,44, 123, 17, SSD1306_COLOR_BLACK);
-  SSD1306_GotoXY(3,45);
-  SSD1306_Puts("gay", &Font_11x18, 1);
-
+  SSD1306_UpdateScreen(&hi2c3);
+  SSD1306_Fill(SSD1306_COLOR_BLACK);
   SSD1306_UpdateScreen(&hi2c1);
+
+  
+
   //SSD1306_ScrollRight(59, 60);
   /* USER CODE END 2 */
 
@@ -304,6 +303,58 @@ static void MX_ADC2_Init(void)
 }
 
 /**
+  * @brief ADC3 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_ADC3_Init(void)
+{
+
+  /* USER CODE BEGIN ADC3_Init 0 */
+
+  /* USER CODE END ADC3_Init 0 */
+
+  ADC_ChannelConfTypeDef sConfig = {0};
+
+  /* USER CODE BEGIN ADC3_Init 1 */
+
+  /* USER CODE END ADC3_Init 1 */
+
+  /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
+  */
+  hadc3.Instance = ADC3;
+  hadc3.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
+  hadc3.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc3.Init.ScanConvMode = DISABLE;
+  hadc3.Init.ContinuousConvMode = ENABLE;
+  hadc3.Init.DiscontinuousConvMode = DISABLE;
+  hadc3.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc3.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc3.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc3.Init.NbrOfConversion = 1;
+  hadc3.Init.DMAContinuousRequests = DISABLE;
+  hadc3.Init.EOCSelection = ADC_EOC_SEQ_CONV;
+  if (HAL_ADC_Init(&hadc3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+  */
+  sConfig.Channel = ADC_CHANNEL_3;
+  sConfig.Rank = 1;
+  sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
+  if (HAL_ADC_ConfigChannel(&hadc3, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN ADC3_Init 2 */
+
+  /* USER CODE END ADC3_Init 2 */
+
+}
+
+/**
   * @brief I2C1 Initialization Function
   * @param None
   * @retval None
@@ -444,6 +495,22 @@ static void MX_SPI1_Init(void)
 }
 
 /**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA2_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA2_Stream0_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -540,7 +607,9 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
+  process_halfbuf();
+}
 /* USER CODE END 4 */
 
 /**

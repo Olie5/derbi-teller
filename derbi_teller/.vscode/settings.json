@@ -7,6 +7,13 @@
         "main.h": "c",
         "stdio.h": "c",
         "buttons.h": "c",
-        "speed.h": "c"
+        "speed.h": "c",
+        "arm_const_structs.h": "c",
+        "toerental.h": "c",
+        "arm_common_tables.h": "c",
+        "arm_math.h": "c",
+        "ssd1306.h": "c",
+        "stm32f4xx_hal.h": "c",
+        "basic_math_functions.h": "c"
     }
 }
